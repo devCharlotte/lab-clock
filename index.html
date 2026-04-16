@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JoonHee🩷</title>
+  <style>
+    :root {
+      --bg-1: #eef2f7;
+      --bg-2: #e8edf5;
+      --bg-3: #dde5f0;
+      --card: rgba(255, 255, 255, 0.62);
+      --card-strong: rgba(255, 255, 255, 0.78);
+      --line: rgba(255, 255, 255, 0.72);
+      --line-soft: rgba(255, 255, 255, 0.42);
+      --text: #111827;
+      --muted: #5b6472;
+      --soft: #7b8698;
+      --accent: #2f6df6;
+      --shadow-lg: 0 24px 60px rgba(74, 92, 128, 0.16);
+      --shadow-md: 0 10px 28px rgba(74, 92, 128, 0.12);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.95), transparent 24%),
+        radial-gradient(circle at 82% 16%, rgba(255,255,255,0.7), transparent 20%),
+        linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 48%, var(--bg-3) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(16px, 3vw, 36px);
+      overflow: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(70px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      width: 280px;
+      height: 280px;
+      top: -40px;
+      right: -50px;
+      background: rgba(190, 214, 255, 0.7);
+    }
+
+    body::after {
+      width: 260px;
+      height: 260px;
+      left: -40px;
+      bottom: -50px;
+      background: rgba(231, 214, 255, 0.55);
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      width: min(920px, 100%);
+      min-height: min(90vh, 820px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .widget {
+      width: 100%;
+      padding: clamp(22px, 4vw, 40px);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, var(--card-strong) 0%, var(--card) 100%);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(24px) saturate(1.1);
+      -webkit-backdrop-filter: blur(24px) saturate(1.1);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(20px, 3vw, 28px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .widget::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.55), transparent 30%, transparent 72%, rgba(255,255,255,0.28));
+      pointer-events: none;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .eyebrow {
+      font-size: 0.84rem;
+      color: var(--soft);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      font-size: clamp(1rem, 1.7vw, 1.16rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.58);
+      border: 1px solid rgba(255,255,255,0.65);
+      color: var(--muted);
+      font-size: 0.9rem;
+      box-shadow: var(--shadow-md);
+      white-space: nowrap;
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #34c759;
+      box-shadow: 0 0 10px rgba(52, 199, 89, 0.45);
+      flex-shrink: 0;
+    }
+
+    .clock-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.62);
+      box-shadow: var(--shadow-md);
+      padding: clamp(18px, 3vw, 28px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .time {
+      font-size: clamp(3.2rem, 13vw, 8.2rem);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      line-height: 0.95;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      color: #0f172a;
+    }
+
+    .date {
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.55;
+      letter-spacing: -0.01em;
+    }
+
+    .memo-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.44);
+      border: 1px solid rgba(255,255,255,0.58);
+      box-shadow: var(--shadow-md);
+      padding: clamp(16px, 2.6vw, 22px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .memo-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .memo-title {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .memo-caption {
+      font-size: 0.9rem;
+      color: var(--soft);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 7em;
+      resize: vertical;
+      border: 1px solid rgba(255,255,255,0.72);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.58);
+      color: var(--text);
+      outline: none;
+      padding: 15px 16px;
+      font-size: clamp(0.98rem, 1.8vw, 1.05rem);
+      line-height: 1.65;
+      letter-spacing: -0.01em;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    textarea::placeholder {
+      color: #8a94a6;
+    }
+
+    textarea:focus {
+      border-color: rgba(47, 109, 246, 0.32);
+      box-shadow: 0 0 0 4px rgba(47, 109, 246, 0.09);
+      background: rgba(255,255,255,0.75);
+    }
+
+    .memo-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      font-size: 0.92rem;
+      color: var(--soft);
+      min-height: 1.2em;
+    }
+
+    .clear-btn {
+      appearance: none;
+      border: none;
+      border-radius: 14px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.76);
+      color: var(--text);
+      font-size: 0.94rem;
+      font-weight: 600;
+      box-shadow: 0 8px 20px rgba(82, 96, 129, 0.12);
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+    }
+
+    .clear-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 12px 24px rgba(82, 96, 129, 0.16);
+    }
+
+    .clear-btn:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 640px) {
+      .widget {
+        padding: 18px 14px;
+        border-radius: 26px;
+      }
+
+      .header,
+      .memo-head,
+      .memo-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .clock-card,
+      .memo-card {
+        border-radius: 22px;
+      }
+
+      textarea {
+        min-height: 7.6em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="widget" aria-label="준희">
+      <div class="header">
+        <div class="title-wrap">
+          <div class="eyebrow">🩷</div>
+          <div class="title">Joon Hee</div>
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span>Asia/Seoul</span>
+        </div>
+      </div>
+
+      <section class="clock-card" aria-label="clock">
+        <div id="time" class="time">00:00:00</div>
+        <div id="date" class="date">0000년 00월 00일</div>
+      </section>
+
+      <section class="memo-card" aria-label="memo">
+        <div class="memo-head">
+          <div class="memo-title">memo</div>
+          <div class="memo-caption"></div>
+        </div>
+
+        <textarea
+          id="memo"
+          placeholder=""
+          aria-label="input"
+        ></textarea>
+
+        <div class="memo-footer">
+          <div id="status" class="status"></div>
+          <button id="clearBtn" class="clear-btn" type="button">delete</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const timeEl = document.getElementById('time');
+    const dateEl = document.getElementById('date');
+    const memoEl = document.getElementById('memo');
+    const statusEl = document.getElementById('status');
+    const clearBtn = document.getElementById('clearBtn');
+
+    const MEMO_KEY = 'kst-clock-private-memo';
+    const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+
+    function updateClock() {
+      const now = new Date();
+      const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Seoul',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        weekday: 'long'
+      }).formatToParts(now);
+
+      const get = (type) => parts.find(p => p.type === type)?.value || '';
+
+      const hour = get('hour');
+      const minute = get('minute');
+      const second = get('second');
+      const year = get('year');
+      const month = get('month');
+      const day = get('day');
+      const weekdayEn = get('weekday');
+
+      const weekdayMap = {
+        Sunday: weekdays[0],
+        Monday: weekdays[1],
+        Tuesday: weekdays[2],
+        Wednesday: weekdays[3],
+        Thursday: weekdays[4],
+        Friday: weekdays[5],
+        Saturday: weekdays[6]
+      };
+
+      timeEl.textContent = `${hour}:${minute}:${second}`;
+      dateEl.textContent = `${year}년 ${month}월 ${day}일 ${weekdayMap[weekdayEn] || ''}`;
+    }
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+      clearTimeout(setStatus._timer);
+      setStatus._timer = setTimeout(() => {
+        statusEl.textContent = 'auto saved';
+      }, 1200);
+    }
+
+    function loadMemo() {
+      const saved = localStorage.getItem(MEMO_KEY);
+      if (saved !== null) {
+        memoEl.value = saved;
+      }
+    }
+
+    function saveMemo() {
+      localStorage.setItem(MEMO_KEY, memoEl.value);
+      setStatus('saved');
+    }
+
+    memoEl.addEventListener('input', saveMemo);
+
+    clearBtn.addEventListener('click', () => {
+      memoEl.value = '';
+      localStorage.removeItem(MEMO_KEY);
+      setStatus('deleted');
+      memoEl.focus();
+    });
+
+    loadMemo();
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
