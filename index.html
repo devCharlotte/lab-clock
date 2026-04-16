@@ -6,22 +6,21 @@
   <title>KST Clock Memo</title>
   <style>
     :root {
-      --bg-1: #060816;
-      --bg-2: #0b1023;
-      --bg-3: #151b34;
-      --glass: rgba(255, 255, 255, 0.08);
-      --glass-strong: rgba(255, 255, 255, 0.12);
-      --line: rgba(255, 255, 255, 0.14);
-      --line-strong: rgba(255, 255, 255, 0.22);
-      --text: #f8fbff;
-      --muted: #b8c2d9;
-      --soft: #8fa0c7;
-      --accent: #8fb8ff;
-      --accent-2: #c7d8ff;
-      --shadow-lg: 0 28px 80px rgba(0, 0, 0, 0.45);
-      --shadow-md: 0 14px 34px rgba(0, 0, 0, 0.24);
-      --radius-xl: 32px;
-      --radius-lg: 24px;
+      --bg-1: #eef2f7;
+      --bg-2: #e8edf5;
+      --bg-3: #dde5f0;
+      --card: rgba(255, 255, 255, 0.62);
+      --card-strong: rgba(255, 255, 255, 0.78);
+      --line: rgba(255, 255, 255, 0.72);
+      --line-soft: rgba(255, 255, 255, 0.42);
+      --text: #111827;
+      --muted: #5b6472;
+      --soft: #7b8698;
+      --accent: #2f6df6;
+      --shadow-lg: 0 24px 60px rgba(74, 92, 128, 0.16);
+      --shadow-md: 0 10px 28px rgba(74, 92, 128, 0.12);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
       --radius-md: 18px;
     }
 
@@ -36,13 +35,12 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 18% 18%, rgba(129, 160, 255, 0.26), transparent 28%),
-        radial-gradient(circle at 82% 20%, rgba(106, 198, 255, 0.18), transparent 24%),
-        radial-gradient(circle at 50% 85%, rgba(180, 140, 255, 0.12), transparent 26%),
-        linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.95), transparent 24%),
+        radial-gradient(circle at 82% 16%, rgba(255,255,255,0.7), transparent 20%),
+        linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 48%, var(--bg-3) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -54,7 +52,6 @@
     body::after {
       content: "";
       position: fixed;
-      inset: auto;
       border-radius: 999px;
       filter: blur(70px);
       pointer-events: none;
@@ -62,127 +59,148 @@
     }
 
     body::before {
-      width: 320px;
-      height: 320px;
+      width: 280px;
+      height: 280px;
       top: -40px;
-      right: -60px;
-      background: rgba(115, 170, 255, 0.16);
+      right: -50px;
+      background: rgba(190, 214, 255, 0.7);
     }
 
     body::after {
-      width: 280px;
-      height: 280px;
-      left: -60px;
-      bottom: -40px;
-      background: rgba(177, 146, 255, 0.14);
+      width: 260px;
+      height: 260px;
+      left: -40px;
+      bottom: -50px;
+      background: rgba(231, 214, 255, 0.55);
     }
 
     .app {
       position: relative;
       z-index: 1;
-      width: min(980px, 100%);
-      min-height: min(92vh, 860px);
+      width: min(920px, 100%);
+      min-height: min(90vh, 820px);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .panel {
-      position: relative;
+    .widget {
       width: 100%;
-      padding: clamp(24px, 4vw, 44px);
+      padding: clamp(22px, 4vw, 40px);
       border-radius: var(--radius-xl);
-      background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%);
+      background: linear-gradient(180deg, var(--card-strong) 0%, var(--card) 100%);
       border: 1px solid var(--line);
       box-shadow: var(--shadow-lg);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      overflow: hidden;
+      backdrop-filter: blur(24px) saturate(1.1);
+      -webkit-backdrop-filter: blur(24px) saturate(1.1);
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: clamp(20px, 3vw, 30px);
+      gap: clamp(20px, 3vw, 28px);
+      position: relative;
+      overflow: hidden;
     }
 
-    .panel::before {
+    .widget::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 32%, transparent 70%, rgba(255,255,255,0.05));
+      background: linear-gradient(135deg, rgba(255,255,255,0.55), transparent 30%, transparent 72%, rgba(255,255,255,0.28));
       pointer-events: none;
     }
 
-    .panel::after {
-      content: "";
-      position: absolute;
-      inset: 1px;
-      border-radius: calc(var(--radius-xl) - 1px);
-      border: 1px solid rgba(255,255,255,0.05);
-      pointer-events: none;
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+      z-index: 1;
     }
 
-    .top-badge {
+    .title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .eyebrow {
+      font-size: 0.84rem;
+      color: var(--soft);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      font-size: clamp(1rem, 1.7vw, 1.16rem);
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .pill {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 9px 14px;
+      padding: 8px 12px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.05);
+      background: rgba(255,255,255,0.58);
+      border: 1px solid rgba(255,255,255,0.65);
       color: var(--muted);
-      font-size: clamp(0.82rem, 1.2vw, 0.96rem);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      font-size: 0.9rem;
       box-shadow: var(--shadow-md);
+      white-space: nowrap;
     }
 
-    .dot {
+    .pill-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: linear-gradient(180deg, #bcd3ff 0%, #7ca9ff 100%);
-      box-shadow: 0 0 14px rgba(143, 184, 255, 0.8);
+      background: #34c759;
+      box-shadow: 0 0 10px rgba(52, 199, 89, 0.45);
       flex-shrink: 0;
     }
 
-    .clock-wrap {
+    .clock-card {
+      position: relative;
+      z-index: 1;
       width: 100%;
+      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.62);
+      box-shadow: var(--shadow-md);
+      padding: clamp(18px, 3vw, 28px);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
-      padding: clamp(10px, 1.2vw, 16px) 0;
+      gap: 10px;
     }
 
     .time {
-      font-size: clamp(3.3rem, 14vw, 8.9rem);
-      font-weight: 800;
+      font-size: clamp(3.2rem, 13vw, 8.2rem);
+      font-weight: 700;
+      letter-spacing: -0.05em;
       line-height: 0.95;
-      letter-spacing: 0.04em;
       text-align: center;
       font-variant-numeric: tabular-nums;
-      text-shadow: 0 0 24px rgba(180, 210, 255, 0.08);
-      background: linear-gradient(180deg, #ffffff 0%, #dce8ff 45%, #b4c9ff 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
+      color: #0f172a;
     }
 
     .date {
-      text-align: center;
+      font-size: clamp(1rem, 2vw, 1.3rem);
       color: var(--muted);
-      font-size: clamp(1rem, 2vw, 1.34rem);
-      line-height: 1.6;
-      letter-spacing: 0.01em;
+      text-align: center;
+      line-height: 1.55;
+      letter-spacing: -0.01em;
     }
 
     .memo-card {
-      width: min(760px, 100%);
+      position: relative;
+      z-index: 1;
+      width: 100%;
       border-radius: var(--radius-lg);
-      border: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(11, 16, 35, 0.58), rgba(8, 12, 28, 0.72));
+      background: rgba(255,255,255,0.44);
+      border: 1px solid rgba(255,255,255,0.58);
       box-shadow: var(--shadow-md);
-      padding: clamp(16px, 2.2vw, 22px);
+      padding: clamp(16px, 2.6vw, 22px);
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -192,15 +210,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
     .memo-title {
-      font-size: clamp(1rem, 1.6vw, 1.08rem);
-      color: var(--accent-2);
-      font-weight: 600;
-      letter-spacing: 0.01em;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
     }
 
     .memo-caption {
@@ -210,28 +227,28 @@
 
     textarea {
       width: 100%;
-      min-height: 7.2em;
+      min-height: 7em;
       resize: vertical;
-      border: 1px solid rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255,255,255,0.72);
       border-radius: var(--radius-md);
-      padding: 16px 18px;
-      outline: none;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255,255,255,0.58);
       color: var(--text);
-      font-size: clamp(1rem, 1.8vw, 1.05rem);
+      outline: none;
+      padding: 15px 16px;
+      font-size: clamp(0.98rem, 1.8vw, 1.05rem);
       line-height: 1.65;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+      letter-spacing: -0.01em;
       transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
     }
 
     textarea::placeholder {
-      color: #8696bb;
+      color: #8a94a6;
     }
 
     textarea:focus {
-      border-color: rgba(143, 184, 255, 0.9);
-      background: rgba(255, 255, 255, 0.055);
-      box-shadow: 0 0 0 4px rgba(143, 184, 255, 0.14);
+      border-color: rgba(47, 109, 246, 0.32);
+      box-shadow: 0 0 0 4px rgba(47, 109, 246, 0.09);
+      background: rgba(255,255,255,0.75);
     }
 
     .memo-footer {
@@ -250,22 +267,22 @@
 
     .clear-btn {
       appearance: none;
-      border: 1px solid var(--line-strong);
+      border: none;
       border-radius: 14px;
-      padding: 10px 15px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      padding: 10px 14px;
+      background: rgba(255,255,255,0.76);
       color: var(--text);
       font-size: 0.94rem;
       font-weight: 600;
+      box-shadow: 0 8px 20px rgba(82, 96, 129, 0.12);
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
-      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
     }
 
     .clear-btn:hover {
       transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.3);
-      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 12px 24px rgba(82, 96, 129, 0.16);
     }
 
     .clear-btn:active {
@@ -273,49 +290,57 @@
     }
 
     @media (max-width: 640px) {
-      .panel {
-        padding: 20px 14px 18px;
-        border-radius: 24px;
+      .widget {
+        padding: 18px 14px;
+        border-radius: 26px;
       }
 
-      .memo-card {
-        padding: 14px;
-        border-radius: 20px;
-      }
-
+      .header,
+      .memo-head,
       .memo-footer {
         flex-direction: column;
         align-items: flex-start;
       }
 
+      .clock-card,
+      .memo-card {
+        border-radius: 22px;
+      }
+
       textarea {
-        min-height: 7.8em;
+        min-height: 7.6em;
       }
     }
   </style>
 </head>
 <body>
   <main class="app">
-    <section class="panel" aria-label="한국시간 시계와 개인 메모장">
-      <div class="top-badge">
-        <span class="dot"></span>
-        <span>Korea Standard Time</span>
+    <section class="widget" aria-label="한국시간 시계와 개인 메모장">
+      <div class="header">
+        <div class="title-wrap">
+          <div class="eyebrow">Clock Widget</div>
+          <div class="title">한국시간</div>
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span>Asia/Seoul</span>
+        </div>
       </div>
 
-      <div class="clock-wrap">
+      <section class="clock-card" aria-label="디지털 시계">
         <div id="time" class="time">00:00:00</div>
         <div id="date" class="date">0000년 00월 00일</div>
-      </div>
+      </section>
 
       <section class="memo-card" aria-label="개인 메모 영역">
         <div class="memo-head">
           <div class="memo-title">개인 메모</div>
-          <div class="memo-caption">현재 브라우저에만 저장됩니다</div>
+          <div class="memo-caption">이 브라우저에서만 저장됩니다</div>
         </div>
 
         <textarea
           id="memo"
-          placeholder="간단한 할 일, 생각, 일정 등을 적어두세요."
+          placeholder="간단한 일정이나 메모를 적어두세요."
           aria-label="개인 메모 입력"
         ></textarea>
 
