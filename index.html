@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KST Clock Memo</title>
+  <style>
+    :root {
+      --bg-1: #060816;
+      --bg-2: #0b1023;
+      --bg-3: #151b34;
+      --glass: rgba(255, 255, 255, 0.08);
+      --glass-strong: rgba(255, 255, 255, 0.12);
+      --line: rgba(255, 255, 255, 0.14);
+      --line-strong: rgba(255, 255, 255, 0.22);
+      --text: #f8fbff;
+      --muted: #b8c2d9;
+      --soft: #8fa0c7;
+      --accent: #8fb8ff;
+      --accent-2: #c7d8ff;
+      --shadow-lg: 0 28px 80px rgba(0, 0, 0, 0.45);
+      --shadow-md: 0 14px 34px rgba(0, 0, 0, 0.24);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(129, 160, 255, 0.26), transparent 28%),
+        radial-gradient(circle at 82% 20%, rgba(106, 198, 255, 0.18), transparent 24%),
+        radial-gradient(circle at 50% 85%, rgba(180, 140, 255, 0.12), transparent 26%),
+        linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(16px, 3vw, 36px);
+      overflow: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      border-radius: 999px;
+      filter: blur(70px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::before {
+      width: 320px;
+      height: 320px;
+      top: -40px;
+      right: -60px;
+      background: rgba(115, 170, 255, 0.16);
+    }
+
+    body::after {
+      width: 280px;
+      height: 280px;
+      left: -60px;
+      bottom: -40px;
+      background: rgba(177, 146, 255, 0.14);
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      width: min(980px, 100%);
+      min-height: min(92vh, 860px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .panel {
+      position: relative;
+      width: 100%;
+      padding: clamp(24px, 4vw, 44px);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.05) 100%);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(20px, 3vw, 30px);
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent 32%, transparent 70%, rgba(255,255,255,0.05));
+      pointer-events: none;
+    }
+
+    .panel::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: calc(var(--radius-xl) - 1px);
+      border: 1px solid rgba(255,255,255,0.05);
+      pointer-events: none;
+    }
+
+    .top-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-size: clamp(0.82rem, 1.2vw, 0.96rem);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      box-shadow: var(--shadow-md);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #bcd3ff 0%, #7ca9ff 100%);
+      box-shadow: 0 0 14px rgba(143, 184, 255, 0.8);
+      flex-shrink: 0;
+    }
+
+    .clock-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: clamp(10px, 1.2vw, 16px) 0;
+    }
+
+    .time {
+      font-size: clamp(3.3rem, 14vw, 8.9rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: 0.04em;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 24px rgba(180, 210, 255, 0.08);
+      background: linear-gradient(180deg, #ffffff 0%, #dce8ff 45%, #b4c9ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .date {
+      text-align: center;
+      color: var(--muted);
+      font-size: clamp(1rem, 2vw, 1.34rem);
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+    }
+
+    .memo-card {
+      width: min(760px, 100%);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(11, 16, 35, 0.58), rgba(8, 12, 28, 0.72));
+      box-shadow: var(--shadow-md);
+      padding: clamp(16px, 2.2vw, 22px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .memo-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .memo-title {
+      font-size: clamp(1rem, 1.6vw, 1.08rem);
+      color: var(--accent-2);
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+
+    .memo-caption {
+      font-size: 0.9rem;
+      color: var(--soft);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 7.2em;
+      resize: vertical;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-size: clamp(1rem, 1.8vw, 1.05rem);
+      line-height: 1.65;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    textarea::placeholder {
+      color: #8696bb;
+    }
+
+    textarea:focus {
+      border-color: rgba(143, 184, 255, 0.9);
+      background: rgba(255, 255, 255, 0.055);
+      box-shadow: 0 0 0 4px rgba(143, 184, 255, 0.14);
+    }
+
+    .memo-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .status {
+      font-size: 0.92rem;
+      color: var(--soft);
+      min-height: 1.2em;
+    }
+
+    .clear-btn {
+      appearance: none;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      padding: 10px 15px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      color: var(--text);
+      font-size: 0.94rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    .clear-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.3);
+      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+    }
+
+    .clear-btn:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 640px) {
+      .panel {
+        padding: 20px 14px 18px;
+        border-radius: 24px;
+      }
+
+      .memo-card {
+        padding: 14px;
+        border-radius: 20px;
+      }
+
+      .memo-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      textarea {
+        min-height: 7.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="panel" aria-label="한국시간 시계와 개인 메모장">
+      <div class="top-badge">
+        <span class="dot"></span>
+        <span>Korea Standard Time</span>
+      </div>
+
+      <div class="clock-wrap">
+        <div id="time" class="time">00:00:00</div>
+        <div id="date" class="date">0000년 00월 00일</div>
+      </div>
+
+      <section class="memo-card" aria-label="개인 메모 영역">
+        <div class="memo-head">
+          <div class="memo-title">개인 메모</div>
+          <div class="memo-caption">현재 브라우저에만 저장됩니다</div>
+        </div>
+
+        <textarea
+          id="memo"
+          placeholder="간단한 할 일, 생각, 일정 등을 적어두세요."
+          aria-label="개인 메모 입력"
+        ></textarea>
+
+        <div class="memo-footer">
+          <div id="status" class="status">자동 저장됨</div>
+          <button id="clearBtn" class="clear-btn" type="button">메모 지우기</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const timeEl = document.getElementById('time');
+    const dateEl = document.getElementById('date');
+    const memoEl = document.getElementById('memo');
+    const statusEl = document.getElementById('status');
+    const clearBtn = document.getElementById('clearBtn');
+
+    const MEMO_KEY = 'kst-clock-private-memo';
+    const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+
+    function updateClock() {
+      const now = new Date();
+      const parts = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Seoul',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        weekday: 'long'
+      }).formatToParts(now);
+
+      const get = (type) => parts.find(p => p.type === type)?.value || '';
+
+      const hour = get('hour');
+      const minute = get('minute');
+      const second = get('second');
+      const year = get('year');
+      const month = get('month');
+      const day = get('day');
+      const weekdayEn = get('weekday');
+
+      const weekdayMap = {
+        Sunday: weekdays[0],
+        Monday: weekdays[1],
+        Tuesday: weekdays[2],
+        Wednesday: weekdays[3],
+        Thursday: weekdays[4],
+        Friday: weekdays[5],
+        Saturday: weekdays[6]
+      };
+
+      timeEl.textContent = `${hour}:${minute}:${second}`;
+      dateEl.textContent = `${year}년 ${month}월 ${day}일 ${weekdayMap[weekdayEn] || ''}`;
+    }
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+      clearTimeout(setStatus._timer);
+      setStatus._timer = setTimeout(() => {
+        statusEl.textContent = '자동 저장됨';
+      }, 1200);
+    }
+
+    function loadMemo() {
+      const saved = localStorage.getItem(MEMO_KEY);
+      if (saved !== null) {
+        memoEl.value = saved;
+      }
+    }
+
+    function saveMemo() {
+      localStorage.setItem(MEMO_KEY, memoEl.value);
+      setStatus('저장되었습니다');
+    }
+
+    memoEl.addEventListener('input', saveMemo);
+
+    clearBtn.addEventListener('click', () => {
+      memoEl.value = '';
+      localStorage.removeItem(MEMO_KEY);
+      setStatus('메모를 지웠습니다');
+      memoEl.focus();
+    });
+
+    loadMemo();
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
