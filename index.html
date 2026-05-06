@@ -30,7 +30,7 @@
 
     html, body {
       width: 100%;
-      height: 100%;
+      min-height: 100%;
       margin: 0;
     }
 
@@ -45,7 +45,8 @@
       align-items: center;
       justify-content: center;
       padding: clamp(16px, 3vw, 36px);
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     body::before,
@@ -192,7 +193,8 @@
       letter-spacing: -0.01em;
     }
 
-    .memo-card {
+    .memo-card,
+    .alarm-card {
       position: relative;
       z-index: 1;
       width: 100%;
@@ -206,7 +208,8 @@
       gap: 12px;
     }
 
-    .memo-head {
+    .memo-head,
+    .alarm-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -214,13 +217,15 @@
       flex-wrap: wrap;
     }
 
-    .memo-title {
+    .memo-title,
+    .alarm-title {
       font-size: 1rem;
       font-weight: 700;
       letter-spacing: -0.01em;
     }
 
-    .memo-caption {
+    .memo-caption,
+    .alarm-caption {
       font-size: 0.9rem;
       color: var(--soft);
     }
@@ -251,7 +256,8 @@
       background: rgba(255,255,255,0.75);
     }
 
-    .memo-footer {
+    .memo-footer,
+    .alarm-footer {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -259,13 +265,17 @@
       flex-wrap: wrap;
     }
 
-    .status {
+    .status,
+    .alarm-status {
       font-size: 0.92rem;
       color: var(--soft);
       min-height: 1.2em;
     }
 
-    .clear-btn {
+    .clear-btn,
+    .alarm-btn,
+    .alarm-delete-btn,
+    .alarm-stop-btn {
       appearance: none;
       border: none;
       border-radius: 14px;
@@ -279,14 +289,111 @@
       transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
     }
 
-    .clear-btn:hover {
+    .clear-btn:hover,
+    .alarm-btn:hover,
+    .alarm-delete-btn:hover,
+    .alarm-stop-btn:hover {
       transform: translateY(-1px);
       background: rgba(255,255,255,0.9);
       box-shadow: 0 12px 24px rgba(82, 96, 129, 0.16);
     }
 
-    .clear-btn:active {
+    .clear-btn:active,
+    .alarm-btn:active,
+    .alarm-delete-btn:active,
+    .alarm-stop-btn:active {
       transform: translateY(0);
+    }
+
+    .alarm-form {
+      display: grid;
+      grid-template-columns: minmax(120px, 0.32fr) minmax(180px, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .alarm-input {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.72);
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.58);
+      color: var(--text);
+      outline: none;
+      padding: 12px 14px;
+      font-size: 0.96rem;
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .alarm-input::placeholder {
+      color: #8a94a6;
+    }
+
+    .alarm-input:focus {
+      border-color: rgba(47, 109, 246, 0.32);
+      box-shadow: 0 0 0 4px rgba(47, 109, 246, 0.09);
+      background: rgba(255,255,255,0.75);
+    }
+
+    .alarm-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .alarm-empty {
+      padding: 14px 15px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.36);
+      border: 1px solid rgba(255,255,255,0.5);
+      color: var(--soft);
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    .alarm-item {
+      display: grid;
+      grid-template-columns: 76px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: var(--radius-md);
+      background: rgba(255,255,255,0.48);
+      border: 1px solid rgba(255,255,255,0.58);
+    }
+
+    .alarm-item-time {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #0f172a;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .alarm-item-message {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    .alarm-delete-btn {
+      padding: 8px 11px;
+      color: #6b7280;
+      font-size: 0.86rem;
+      box-shadow: 0 6px 16px rgba(82, 96, 129, 0.1);
+    }
+
+    .alarm-stop-btn {
+      display: none;
+      background: rgba(47, 109, 246, 0.9);
+      color: #ffffff;
+    }
+
+    .alarm-stop-btn.active {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
     @media (max-width: 640px) {
@@ -297,18 +404,46 @@
 
       .header,
       .memo-head,
-      .memo-footer {
+      .memo-footer,
+      .alarm-head,
+      .alarm-footer {
         flex-direction: column;
         align-items: flex-start;
       }
 
       .clock-card,
-      .memo-card {
+      .memo-card,
+      .alarm-card {
         border-radius: 22px;
       }
 
       textarea {
         min-height: 7.6em;
+      }
+
+      .alarm-form {
+        grid-template-columns: 1fr;
+      }
+
+      .alarm-btn {
+        width: 100%;
+      }
+
+      .alarm-item {
+        grid-template-columns: 1fr auto;
+      }
+
+      .alarm-item-time {
+        grid-column: 1 / 2;
+      }
+
+      .alarm-item-message {
+        grid-column: 1 / -1;
+      }
+
+      .alarm-delete-btn {
+        grid-column: 2 / 3;
+        grid-row: 1 / 2;
       }
     }
   </style>
@@ -349,6 +484,26 @@
           <button id="clearBtn" class="clear-btn" type="button">delete</button>
         </div>
       </section>
+
+      <section class="alarm-card" aria-label="alarm">
+        <div class="alarm-head">
+          <div class="alarm-title">alarm</div>
+          <div id="alarmCount" class="alarm-caption">0 / 5</div>
+        </div>
+
+        <div class="alarm-form">
+          <input id="alarmTime" class="alarm-input" type="time" aria-label="alarm time" />
+          <input id="alarmMessage" class="alarm-input" type="text" maxlength="80" placeholder="alarm memo" aria-label="alarm message" />
+          <button id="addAlarmBtn" class="alarm-btn" type="button">add</button>
+        </div>
+
+        <div id="alarmList" class="alarm-list" aria-label="alarm list"></div>
+
+        <div class="alarm-footer">
+          <div id="alarmStatus" class="alarm-status"></div>
+          <button id="stopAlarmBtn" class="alarm-stop-btn" type="button">stop alarm</button>
+        </div>
+      </section>
     </section>
   </main>
 
@@ -358,12 +513,25 @@
     const memoEl = document.getElementById('memo');
     const statusEl = document.getElementById('status');
     const clearBtn = document.getElementById('clearBtn');
+    const alarmTimeEl = document.getElementById('alarmTime');
+    const alarmMessageEl = document.getElementById('alarmMessage');
+    const addAlarmBtn = document.getElementById('addAlarmBtn');
+    const alarmListEl = document.getElementById('alarmList');
+    const alarmStatusEl = document.getElementById('alarmStatus');
+    const alarmCountEl = document.getElementById('alarmCount');
+    const stopAlarmBtn = document.getElementById('stopAlarmBtn');
 
     const MEMO_KEY = 'kst-clock-private-memo';
-    const weekdays = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+    const ALARM_KEY = 'kst-clock-private-alarms';
+    const MAX_ALARMS = 5;
+    const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
 
-    function updateClock() {
-      const now = new Date();
+    let alarms = [];
+    let audioContext = null;
+    let alarmSoundTimer = null;
+    let activeOscillators = [];
+
+    function getSeoulParts(date = new Date()) {
       const parts = new Intl.DateTimeFormat('en-GB', {
         timeZone: 'Asia/Seoul',
         hour: '2-digit',
@@ -374,18 +542,23 @@
         month: '2-digit',
         day: '2-digit',
         weekday: 'long'
-      }).formatToParts(now);
+      }).formatToParts(date);
 
       const get = (type) => parts.find(p => p.type === type)?.value || '';
 
-      const hour = get('hour');
-      const minute = get('minute');
-      const second = get('second');
-      const year = get('year');
-      const month = get('month');
-      const day = get('day');
-      const weekdayEn = get('weekday');
+      return {
+        hour: get('hour'),
+        minute: get('minute'),
+        second: get('second'),
+        year: get('year'),
+        month: get('month'),
+        day: get('day'),
+        weekdayEn: get('weekday')
+      };
+    }
 
+    function updateClock() {
+      const nowParts = getSeoulParts();
       const weekdayMap = {
         Sunday: weekdays[0],
         Monday: weekdays[1],
@@ -396,8 +569,8 @@
         Saturday: weekdays[6]
       };
 
-      timeEl.textContent = `${hour}:${minute}:${second}`;
-      dateEl.textContent = `${year}년 ${month}월 ${day}일 ${weekdayMap[weekdayEn] || ''}`;
+      timeEl.textContent = `${nowParts.hour}:${nowParts.minute}:${nowParts.second}`;
+      dateEl.textContent = `${nowParts.year}년 ${nowParts.month}월 ${nowParts.day}일 ${weekdayMap[nowParts.weekdayEn] || ''}`;
     }
 
     function setStatus(message) {
@@ -406,6 +579,14 @@
       setStatus._timer = setTimeout(() => {
         statusEl.textContent = 'auto saved';
       }, 1200);
+    }
+
+    function setAlarmStatus(message) {
+      alarmStatusEl.textContent = message;
+      clearTimeout(setAlarmStatus._timer);
+      setAlarmStatus._timer = setTimeout(() => {
+        alarmStatusEl.textContent = alarms.length ? 'alarm saved' : '';
+      }, 1800);
     }
 
     function loadMemo() {
@@ -420,6 +601,248 @@
       setStatus('saved');
     }
 
+    function loadAlarms() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(ALARM_KEY) || '[]');
+        alarms = Array.isArray(saved) ? saved.slice(0, MAX_ALARMS) : [];
+      } catch (error) {
+        alarms = [];
+      }
+    }
+
+    function saveAlarms() {
+      localStorage.setItem(ALARM_KEY, JSON.stringify(alarms));
+      renderAlarms();
+    }
+
+    function createAlarmId() {
+      if (window.crypto && crypto.randomUUID) {
+        return crypto.randomUUID();
+      }
+      return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    function renderAlarms() {
+      alarmCountEl.textContent = `${alarms.length} / ${MAX_ALARMS}`;
+
+      if (!alarms.length) {
+        alarmListEl.innerHTML = '<div class="alarm-empty">No alarms yet.</div>';
+        return;
+      }
+
+      const sortedAlarms = [...alarms].sort((a, b) => a.time.localeCompare(b.time));
+      alarmListEl.innerHTML = '';
+
+      sortedAlarms.forEach((alarm) => {
+        const item = document.createElement('div');
+        item.className = 'alarm-item';
+
+        const time = document.createElement('div');
+        time.className = 'alarm-item-time';
+        time.textContent = alarm.time;
+
+        const message = document.createElement('div');
+        message.className = 'alarm-item-message';
+        message.textContent = alarm.message || 'alarm';
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'alarm-delete-btn';
+        deleteBtn.type = 'button';
+        deleteBtn.textContent = 'delete';
+        deleteBtn.addEventListener('click', () => deleteAlarm(alarm.id));
+
+        item.appendChild(time);
+        item.appendChild(message);
+        item.appendChild(deleteBtn);
+        alarmListEl.appendChild(item);
+      });
+    }
+
+    async function ensureAudioReady() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) {
+        return;
+      }
+
+      if (!audioContext) {
+        audioContext = new AudioContextClass();
+      }
+
+      if (audioContext.state === 'suspended') {
+        try {
+          await audioContext.resume();
+        } catch (error) {
+          
+        }
+      }
+    }
+
+    function playOneBeep(startDelay = 0) {
+      if (!audioContext) {
+        return;
+      }
+
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      const startTime = audioContext.currentTime + startDelay;
+      const stopTime = startTime + 0.34;
+
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(880, startTime);
+      oscillator.frequency.setValueAtTime(660, startTime + 0.17);
+
+      gain.gain.setValueAtTime(0.0001, startTime);
+      gain.gain.exponentialRampToValueAtTime(0.22, startTime + 0.03);
+      gain.gain.exponentialRampToValueAtTime(0.0001, stopTime);
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+      oscillator.start(startTime);
+      oscillator.stop(stopTime);
+
+      activeOscillators.push(oscillator);
+      oscillator.addEventListener('ended', () => {
+        activeOscillators = activeOscillators.filter(item => item !== oscillator);
+      });
+    }
+
+    async function startAlarmSound() {
+      await ensureAudioReady();
+      stopAlarmSound();
+      playOneBeep(0);
+      playOneBeep(0.46);
+      playOneBeep(0.92);
+
+      alarmSoundTimer = setInterval(() => {
+        playOneBeep(0);
+        playOneBeep(0.46);
+        playOneBeep(0.92);
+      }, 1800);
+
+      stopAlarmBtn.classList.add('active');
+    }
+
+    function stopAlarmSound() {
+      if (alarmSoundTimer) {
+        clearInterval(alarmSoundTimer);
+        alarmSoundTimer = null;
+      }
+
+      activeOscillators.forEach((oscillator) => {
+        try {
+          oscillator.stop();
+        } catch (error) {
+          // Already stopped.
+        }
+      });
+      activeOscillators = [];
+      stopAlarmBtn.classList.remove('active');
+    }
+
+    async function requestNotificationPermission() {
+      if (!('Notification' in window)) {
+        return 'unsupported';
+      }
+
+      if (Notification.permission === 'default') {
+        return await Notification.requestPermission();
+      }
+
+      return Notification.permission;
+    }
+
+    function showBrowserNotification(alarm) {
+      if (!('Notification' in window) || Notification.permission !== 'granted') {
+        return;
+      }
+
+      const notification = new Notification('Joon Hee alarm', {
+        body: `${alarm.time}  ${alarm.message || 'alarm'}`,
+        silent: true
+      });
+
+      setTimeout(() => notification.close(), 12000);
+    }
+
+    async function addAlarm() {
+      const time = alarmTimeEl.value;
+      const message = alarmMessageEl.value.trim();
+
+      if (!time) {
+        setAlarmStatus('time required');
+        alarmTimeEl.focus();
+        return;
+      }
+
+      if (!message) {
+        setAlarmStatus('memo required');
+        alarmMessageEl.focus();
+        return;
+      }
+
+      if (alarms.length >= MAX_ALARMS) {
+        setAlarmStatus('maximum 5 alarms');
+        return;
+      }
+
+      if (alarms.some(alarm => alarm.time === time && alarm.message === message)) {
+        setAlarmStatus('already added');
+        return;
+      }
+
+      await ensureAudioReady();
+      const permission = await requestNotificationPermission();
+
+      alarms.push({
+        id: createAlarmId(),
+        time,
+        message,
+        lastFiredDate: ''
+      });
+
+      alarmTimeEl.value = '';
+      alarmMessageEl.value = '';
+      saveAlarms();
+
+      if (permission === 'denied') {
+        setAlarmStatus('alarm saved, notification blocked');
+      } else if (permission === 'unsupported') {
+        setAlarmStatus('alarm saved, notification unsupported');
+      } else {
+        setAlarmStatus('alarm added');
+      }
+    }
+
+    function deleteAlarm(id) {
+      alarms = alarms.filter(alarm => alarm.id !== id);
+      saveAlarms();
+      setAlarmStatus('alarm deleted');
+    }
+
+    async function fireAlarm(alarm, todayKey) {
+      alarm.lastFiredDate = todayKey;
+      saveAlarms();
+      setAlarmStatus(`${alarm.time} ${alarm.message}`);
+      showBrowserNotification(alarm);
+      await startAlarmSound();
+    }
+
+    function checkAlarms() {
+      if (!alarms.length) {
+        return;
+      }
+
+      const nowParts = getSeoulParts();
+      const currentTime = `${nowParts.hour}:${nowParts.minute}`;
+      const todayKey = `${nowParts.year}-${nowParts.month}-${nowParts.day}`;
+
+      alarms.forEach((alarm) => {
+        if (alarm.time === currentTime && alarm.lastFiredDate !== todayKey) {
+          fireAlarm(alarm, todayKey);
+        }
+      });
+    }
+
     memoEl.addEventListener('input', saveMemo);
 
     clearBtn.addEventListener('click', () => {
@@ -429,9 +852,31 @@
       memoEl.focus();
     });
 
+    addAlarmBtn.addEventListener('click', addAlarm);
+    alarmMessageEl.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        addAlarm();
+      }
+    });
+    stopAlarmBtn.addEventListener('click', () => {
+      stopAlarmSound();
+      setAlarmStatus('alarm stopped');
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        checkAlarms();
+      }
+    });
+
     loadMemo();
+    loadAlarms();
+    renderAlarms();
     updateClock();
-    setInterval(updateClock, 1000);
+    checkAlarms();
+    setInterval(() => {
+      updateClock();
+      checkAlarms();
+    }, 1000);
   </script>
 </body>
-</html>
